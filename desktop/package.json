@@ -1,0 +1,61 @@
+{
+  "name": "jellymute",
+  "productName": "JellyMute",
+  "version": "1.0.0",
+  "description": "Mark audio intervals in a video and export .mute sidecar files for the Jellyfin JellyMute plugin.",
+  "author": "Renaldo Goosen",
+  "license": "MIT",
+  "main": "src/main/main.js",
+  "scripts": {
+    "start": "electron .",
+    "test": "node --test",
+    "dist": "electron-builder --win nsis",
+    "dist:dir": "electron-builder --win nsis --dir"
+  },
+  "build": {
+    "appId": "com.jellymute.desktop",
+    "productName": "JellyMute",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "src/**/*"
+    ],
+    "extraResources": [],
+    "asarUnpack": [
+      "node_modules/ffmpeg-static/**"
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "build/icon.png",
+      "artifactName": "JellyMute-Setup-${version}.${ext}"
+    },
+    "nsis": {
+      "oneClick": true,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": false,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "JellyMute"
+    }
+  },
+  "devDependencies": {
+    "electron": "^44.1.1",
+    "electron-builder": "^26.15.3"
+  },
+  "dependencies": {
+    "ffmpeg-static": "^5.3.0"
+  },
+  "allowScripts": {
+    "electron-winstaller@5.4.0": true,
+    "ffmpeg-static@5.3.0": true,
+    "electron@44.1.1": true
+  }
+}

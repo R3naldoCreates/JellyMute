@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; media-src media:; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self'" />
+  <title>JellyMute</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div id="drop-overlay" class="hidden"><div class="drop-box">Drop video to open</div></div>
+
+  <header id="topbar">
+    <div class="brand">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <rect x="1" y="9" width="2.6" height="6" rx="1.3" fill="#4cc2e0"/>
+        <rect x="6" y="5" width="2.6" height="14" rx="1.3" fill="#4cc2e0"/>
+        <rect x="11" y="2" width="2.6" height="20" rx="1.3" fill="#4cc2e0"/>
+        <rect x="16" y="7" width="2.6" height="10" rx="1.3" fill="#ff5f6d"/>
+        <rect x="21" y="10" width="2.6" height="4" rx="1.3" fill="#4cc2e0"/>
+      </svg>
+      <span>JellyMute</span>
+    </div>
+    <button id="btn-open" class="btn" title="Open a video (Ctrl+O)">Open Video</button>
+    <div id="file-title" class="hidden"></div>
+    <div class="spacer"></div>
+    <div id="save-status" class="hidden"></div>
+    <button id="btn-reveal" class="btn subtle hidden" title="Show the .mute file in Explorer">Show .mute file</button>
+  </header>
+
+  <main id="empty-state">
+    <div class="empty-inner">
+      <svg width="84" height="84" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <rect x="1" y="9" width="2.6" height="6" rx="1.3" fill="#3a4a58"/>
+        <rect x="6" y="5" width="2.6" height="14" rx="1.3" fill="#3a4a58"/>
+        <rect x="11" y="2" width="2.6" height="20" rx="1.3" fill="#4cc2e0"/>
+        <rect x="16" y="7" width="2.6" height="10" rx="1.3" fill="#3a4a58"/>
+        <rect x="21" y="10" width="2.6" height="4" rx="1.3" fill="#3a4a58"/>
+      </svg>
+      <h1>Drag a video here</h1>
+      <p>JellyMute builds an audio waveform so you can mark sections to mute —
+         swear words, spoilers, anything — and saves them as a
+         <code>.mute</code> file next to the video for the Jellyfin plugin.</p>
+      <button id="btn-open-empty" class="btn primary">Open a video</button>
+      <p class="fine">Supported: mp4 · mkv · avi · mov · webm · ts and more</p>
+    </div>
+  </main>
+
+  <main id="workspace" class="hidden">
+    <div id="content">
+      <section id="video-pane">
+        <div id="video-wrap">
+          <video id="video" preload="auto"></video>
+          <div id="video-error" class="hidden">
+            <div>
+              <strong>Preview not available for this file</strong>
+              <span>This file uses a codec the built-in player can't decode.
+              You can still see the waveform and mark intervals — jump around
+              with the transport keys and mark by ear in another player.</span>
+            </div>
+          </div>
+          <div id="mute-indicator" class="hidden">MUTED</div>
+        </div>
+      </section>
+
+      <aside id="intervals-pane">
+        <div class="pane-head">
+          <h2>Intervals <span id="interval-count" class="count-badge">0</span></h2>
+          <button id="btn-add" class="btn subtle small" title="Create a 1-second interval at the playhead (A)">+ Add</button>
+        </div>
+        <div id="interval-list-wrap">
+          <ul id="interval-list"></ul>
+          <div id="interval-empty" class="pane-empty">
+            No intervals yet.<br />
+            <strong>Right-click</strong> the waveform to drop a marker,
+            or use <strong>Mark Start (S)</strong> / <strong>Mark End (E)</strong> while playing.
+          </div>
+        </div>
+        <div class="pane-foot">
+          <label class="switch-label">
+            <input type="checkbox" id="cb-preview" />
+            <span class="switch"></span>
+            Preview mutes while watching
+          </label>
+        </div>
+      </aside>
+
+      <section id="transport-pane">
+        <div id="transport-row">
+          <button id="btn-back10" class="btn icon" title="Back 10 seconds">⏪10</button>
+          <button id="btn-back1" class="btn icon" title="Back 1 second (←)">⏪1</button>
+          <button id="btn-play" class="btn icon primary" title="Play / Pause (Space)">▶</button>
+          <button id="btn-fwd1" class="btn icon" title="Forward 1 second (→)">1⏩</button>
+          <button id="btn-fwd10" class="btn icon" title="Forward 10 seconds">10⏩</button>
+          <span id="time-display" class="time-display">00:00:00 / 00:00:00</span>
+          <div class="spacer"></div>
+          <label class="inline-label" title="Playback speed">Speed
+            <select id="speed-select">
+              <option value="0.5">0.5×</option>
+              <option value="0.75">0.75×</option>
+              <option value="1" selected>1×</option>
+              <option value="1.25">1.25×</option>
+              <option value="1.5">1.5×</option>
+              <option value="2">2×</option>
+            </select>
+          </label>
+          <button id="btn-mute" class="btn icon" title="Mute / unmute preview audio">🔊</button>
+          <input type="range" id="volume" min="0" max="1" step="0.05" value="1" title="Preview volume" />
+        </div>
+        <div id="mark-row">
+          <button id="btn-mark-start" class="btn mark-start" title="Mark interval start at the playhead (S)">● Mark Start</button>
+          <button id="btn-mark-end" class="btn mark-end" title="Mark interval end at the playhead (E)">● Mark End</button>
+          <span id="mark-hint">Tip: drag across the waveform to mark a section, or press S and E while listening.</span>
+        </div>
+      </section>
+
+      <section id="wave-pane">
+        <div id="wave-main-wrap">
+          <canvas id="wave-main"></canvas>
+          <div id="wave-progress" class="hidden">
+            <span>Analyzing audio…</span>
+            <progress id="wave-progress-bar" max="1" value="0"></progress>
+          </div>
+        </div>
+        <canvas id="wave-overview" title="Overview — click or drag to navigate"></canvas>
+      </section>
+    </div>
+
+    <footer id="statusbar">
+      <span id="status-video" title=""></span>
+      <span id="status-sidecar" title=""></span>
+    </footer>
+  </main>
+
+  <div id="toast" class="hidden"></div>
+
+  <script src="../shared/timestamps.js"></script>
+  <script src="js/waveformView.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

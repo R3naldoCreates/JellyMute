@@ -1,4 +1,3 @@
-[README.md](https://github.com/user-attachments/files/31795406/README.md)
 # JellyMute 🔇
 
 **Mute the parts you don't want to hear — in Jellyfin, on every screen.**
