@@ -1,4 +1,5 @@
 # JellyMute 🔇
+<img width="1385" height="864" alt="Screenshot 2026-09-03 170802" src="https://github.com/user-attachments/assets/9547a212-bc9e-4f4a-9d18-760e2ebc775e" />
 
 **Mute the parts you don't want to hear — in Jellyfin, on every screen.**
 
