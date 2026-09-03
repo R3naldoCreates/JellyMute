@@ -9,8 +9,8 @@ Grab both files from the [**Releases**](../../releases) page:
 
 | File | What it is |
 |------|------------|
-| `JellyMute-Setup-1.0.0.exe` | The Windows desktop editor — install and start marking videos |
-| `JellyMute-plugin-1.0.0.zip` | The Jellyfin 10.11 server plugin — unzip into your plugins folder |
+| `JellyMute-Setup-1.0.1.exe` | The Windows desktop editor — install and start marking videos |
+| `JellyMute-plugin-1.0.1.zip` | The Jellyfin 10.11 server plugin — unzip into your plugins folder |
 
 JellyMute is two tools that work together:
 
@@ -90,7 +90,7 @@ marked sections. Each viewer's on/off choice is remembered.
 ```json
 {
   "version": 1,
-  "generator": "JellyMute Desktop 1.0.0",
+  "generator": "JellyMute Desktop 1.0.1",
   "source": "Movie.mp4",
   "intervals": [
     { "start": "00:14:32.480", "end": "00:14:35.120" }
@@ -122,8 +122,8 @@ dotnet publish plugin/JellyMute -c Release -o publish
 
 ## Releases (GitHub Actions)
 
-- Push a tag `desktop-v1.0.1` → builds and attaches `JellyMute-Setup-1.0.1.exe`.
-- Push a tag `plugin-v1.0.1` → builds, tests and attaches `JellyMute-plugin-1.0.1.zip`.
+- Push a tag `desktop-v1.0.2` → builds and attaches `JellyMute-Setup-1.0.2.exe`.
+- Push a tag `plugin-v1.0.2` → builds, tests and attaches `JellyMute-plugin-1.0.2.zip`.
 
 ## Troubleshooting
 
